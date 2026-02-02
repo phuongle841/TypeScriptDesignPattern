@@ -52,7 +52,7 @@ class FlyNoWay implements FlyBehavior {
 
 class FlyWithJetEngine implements FlyBehavior {
   fly = () => {
-    console.log("Brum brum brum!!! to the moon");
+    console.log("Bum bum bum!!! to the moon");
   };
 }
 
@@ -92,9 +92,9 @@ class Swan extends duck {}
 class WoodDuck extends duck {}
 
 const duckList: duck[] = [];
-const dwellerduck = new DwellerDuck();
+const dwellerDuck = new DwellerDuck();
 const plasticDuck = new PlasticDuck();
-duckList.push(dwellerduck);
+duckList.push(dwellerDuck);
 duckList.push(plasticDuck);
 duckList.forEach((d) => {
   d.performFly();
