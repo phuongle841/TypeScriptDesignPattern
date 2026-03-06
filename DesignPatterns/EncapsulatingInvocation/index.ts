@@ -83,8 +83,8 @@ class NoCommand implements Command {
 
 class SimpleControlRemote implements Object {
   private numberOfSlot: number;
-  private onCommand: Command[];
   private offCommand: Command[];
+  private onCommand: Command[];
   private undoCommand: Command;
   constructor() {
     this.numberOfSlot = 7;
@@ -137,10 +137,10 @@ const lightOffCommand: LightOffCommand = new LightOffCommand(light);
 
 const garageDoor: GarageDoor = new GarageDoor();
 const garageDoorOnCommand: GarageDoorOnCommand = new GarageDoorOnCommand(
-  garageDoor
+  garageDoor,
 );
 const garageDoorOffCommand: GarageDoorOffCommand = new GarageDoorOffCommand(
-  garageDoor
+  garageDoor,
 );
 
 const MacroOnCommand = new MacroCommand([lightOnCommand, garageDoorOnCommand]);
