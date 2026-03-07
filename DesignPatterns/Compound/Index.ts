@@ -53,12 +53,26 @@ class DuckSimulator {
       const rubberDuck = duckFactoryOrDuck.createRubberDuck();
       const goose = new GooseAdapter(new Goose());
 
-      console.log("Duck Simulator");
-      this.Simulate(duckCall);
-      this.Simulate(mallardDuck);
-      this.Simulate(redHeadDuck);
-      this.Simulate(rubberDuck);
-      this.Simulate(goose);
+      const FlockOfDuck: Flock = new Flock();
+
+      FlockOfDuck.add(duckCall);
+      FlockOfDuck.add(mallardDuck);
+      FlockOfDuck.add(redHeadDuck);
+      FlockOfDuck.add(rubberDuck);
+      FlockOfDuck.add(goose);
+
+      const FlockOfMallard: Flock = new Flock();
+
+      for (let i = 0; i < 4; i++) {
+        const NewMallard: QuackAble = duckFactoryOrDuck.createMallardDUck();
+        FlockOfMallard.add(NewMallard);
+      }
+      FlockOfDuck.add(FlockOfMallard);
+
+      console.log("Whole flock simulation");
+      this.Simulate(FlockOfDuck);
+      console.log("Mallard flock simulation");
+      this.Simulate(FlockOfMallard);
 
       console.log(
         "The ducks quacked " + QuackCounter.NumberOfQuack + " times.",
@@ -88,9 +102,9 @@ class QuackCounter implements QuackAble {
 }
 
 abstract class abstractDuckFactory {
+  abstract createDuckCall(): QuackAble;
   abstract createMallardDUck(): QuackAble;
   abstract createRedHeadDuck(): QuackAble;
-  abstract createDuckCall(): QuackAble;
   abstract createRubberDuck(): QuackAble;
 }
 
@@ -121,6 +135,51 @@ class CountingDuckFactory implements abstractDuckFactory {
   }
   createRubberDuck(): QuackAble {
     return new QuackCounter(new RubberDuck());
+  }
+}
+
+class Flock implements QuackAble {
+  quackers: Array<QuackAble>;
+
+  constructor() {
+    this.quackers = [];
+  }
+
+  add(duck: QuackAble) {
+    this.quackers.push(duck);
+  }
+
+  quack(): void {
+    for (const duck of this.quackers) {
+      duck.quack();
+    }
+  }
+}
+
+interface MyIterator {
+  hasNext: () => boolean;
+  next: () => object;
+}
+
+class MyArrayList<T> {
+  // Basically an linkedList, but...[Feeling ashamed of don't know to implement this in typescript]
+  arrayList: Array<T>;
+  NumberOfElements: number;
+  constructor() {
+    this.arrayList = [];
+    this.NumberOfElements = 0;
+  }
+
+  length(): number {
+    return this.NumberOfElements;
+  }
+
+  add(element: T) {
+    this.arrayList.push(element);
+  }
+
+  Iterator(): Array<T> {
+    return this.arrayList;
   }
 }
 

@@ -8,7 +8,7 @@ class MenuItem {
     name: string,
     description: string,
     vegetarian: boolean,
-    price: number
+    price: number,
   ) {
     this.name = name;
     this.description = description;
@@ -22,7 +22,7 @@ class MenuItem {
 }
 
 interface Menu {
-  createItorator(): MyIterator;
+  createIterator(): MyIterator;
 }
 
 class PancakeHouseMenu implements Menu {
@@ -34,25 +34,25 @@ class PancakeHouseMenu implements Menu {
       "K&B’s Pancake Breakfast",
       "Pancakes with scrambled eggs, and toast",
       true,
-      2.99
+      2.99,
     );
     this.addItem(
       "Regular Pancake Breakfast",
       "Pancakes with fried eggs, sausage",
       false,
-      2.99
+      2.99,
     );
     this.addItem(
       "Blueberry Pancakes",
       "Pancakes made with fresh blueberries",
       true,
-      3.49
+      3.49,
     );
     this.addItem(
       "Waffles",
       "Waffles, with your choice of blueberries or strawberries",
       true,
-      3.59
+      3.59,
     );
   }
 
@@ -60,14 +60,14 @@ class PancakeHouseMenu implements Menu {
     name: string,
     description: string,
     isVegaterian: boolean,
-    price: number
+    price: number,
   ) => {
     const item = new MenuItem(name, description, isVegaterian, price);
     this.menuItems.push(item);
   };
 
-  createItorator: () => MyIterator = () =>
-    new LunchMenuItorator(this.menuItems);
+  createIterator: () => MyIterator = () =>
+    new LunchMenuIterator(this.menuItems);
 }
 
 class DinerMenu implements Menu {
@@ -81,25 +81,25 @@ class DinerMenu implements Menu {
       "Vegetarian BLT",
       "(Fakin’) Bacon with lettuce & tomato on whole wheat",
       true,
-      2.99
+      2.99,
     );
     this.addItem(
       "BLT",
       "Bacon with lettuce & tomato on whole wheat",
       false,
-      2.99
+      2.99,
     );
     this.addItem(
       "Soup of the day",
       "Soup of the day, with a side of potato salad",
       false,
-      3.29
+      3.29,
     );
     this.addItem(
       "Hotdog",
       "A hot dog, with saurkraut, relish, onions, topped with cheese",
       false,
-      3.05
+      3.05,
     );
   }
 
@@ -107,7 +107,7 @@ class DinerMenu implements Menu {
     name: string,
     description: string,
     isVegaterian: boolean,
-    price: number
+    price: number,
   ) => {
     const item = new MenuItem(name, description, isVegaterian, price);
     if (this.numberOfItem >= this.MAX_ITEMS) {
@@ -117,8 +117,8 @@ class DinerMenu implements Menu {
       this.numberOfItem++;
     }
   };
-  createItorator: () => MyIterator = () =>
-    new DinerMenuItorator(this.menuItems);
+  createIterator: () => MyIterator = () =>
+    new DinerMenuIterator(this.menuItems);
 }
 
 interface MyIterator {
@@ -126,7 +126,7 @@ interface MyIterator {
   next: () => object;
 }
 
-class DinerMenuItorator implements MyIterator {
+class DinerMenuIterator implements MyIterator {
   menuItems: MenuItem[];
   position: number;
   constructor(menuItems: MenuItem[]) {
@@ -151,7 +151,7 @@ class DinerMenuItorator implements MyIterator {
   };
 }
 
-class LunchMenuItorator implements MyIterator {
+class LunchMenuIterator implements MyIterator {
   menuItems: MenuItem[];
   position: number;
   constructor(menuItems: MenuItem[]) {
@@ -187,8 +187,8 @@ class Waitress {
   printMenu(itorator: MyIterator): void;
   printMenu(itorator?: MyIterator): void {
     if (itorator == null) {
-      const pancakeItorator = this.pancakeHouseMenu.createItorator();
-      const dinnerItorator = this.dinerMenu.createItorator();
+      const pancakeItorator = this.pancakeHouseMenu.createIterator();
+      const dinnerItorator = this.dinerMenu.createIterator();
       console.log("Menu------\nBreakfast");
       this.printMenu(pancakeItorator);
       console.log("Lunch");
@@ -201,15 +201,15 @@ class Waitress {
             ", " +
             menuItem.getPrice() +
             ", " +
-            menuItem.getDescription()
+            menuItem.getDescription(),
         );
       }
     }
   }
   printBreakfastMenu: () => void = () => {};
   printLunchMenu: () => void = () => {
-    const breakfastItems: MyIterator = this.pancakeHouseMenu.createItorator();
-    const dinerItems: MyIterator = this.dinerMenu.createItorator();
+    const breakfastItems: MyIterator = this.pancakeHouseMenu.createIterator();
+    const dinerItems: MyIterator = this.dinerMenu.createIterator();
   };
   printVegetarianMenu: () => void = () => {};
   isVegetarian: (name: string) => boolean = () => {

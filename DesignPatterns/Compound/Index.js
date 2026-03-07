@@ -57,12 +57,21 @@ var DuckSimulator = /** @class */ (function () {
             var redHeadDuck = duckFactoryOrDuck.createRedHeadDuck();
             var rubberDuck = duckFactoryOrDuck.createRubberDuck();
             var goose = new GooseAdapter(new Goose());
-            console.log("Duck Simulator");
-            this.Simulate(duckCall);
-            this.Simulate(mallardDuck);
-            this.Simulate(redHeadDuck);
-            this.Simulate(rubberDuck);
-            this.Simulate(goose);
+            var FlockOfDuck = new Flock();
+            FlockOfDuck.add(redHeadDuck);
+            FlockOfDuck.add(mallardDuck);
+            FlockOfDuck.add(rubberDuck);
+            FlockOfDuck.add(goose);
+            var FlockOfMallard = new Flock();
+            for (var i = 0; i < 4; i++) {
+                var NewMallard = duckFactoryOrDuck.createMallardDUck();
+                FlockOfMallard.add(NewMallard);
+            }
+            FlockOfDuck.add(FlockOfMallard);
+            console.log("Whole flock simulation");
+            this.Simulate(FlockOfDuck);
+            console.log("Mallard flock simulation");
+            this.Simulate(FlockOfMallard);
             console.log("The ducks quacked " + QuackCounter.NumberOfQuack + " times.");
         }
         else {
@@ -123,6 +132,37 @@ var CountingDuckFactory = /** @class */ (function () {
         return new QuackCounter(new RubberDuck());
     };
     return CountingDuckFactory;
+}());
+var Flock = /** @class */ (function () {
+    function Flock() {
+        this.quackers = [];
+    }
+    Flock.prototype.add = function (duck) {
+        this.quackers.push(duck);
+    };
+    Flock.prototype.quack = function () {
+        for (var _i = 0, _a = this.quackers; _i < _a.length; _i++) {
+            var duck = _a[_i];
+            duck.quack();
+        }
+    };
+    return Flock;
+}());
+var MyArrayList = /** @class */ (function () {
+    function MyArrayList() {
+        this.arrayList = [];
+        this.NumberOfElements = 0;
+    }
+    MyArrayList.prototype.length = function () {
+        return this.NumberOfElements;
+    };
+    MyArrayList.prototype.add = function (element) {
+        this.arrayList.push(element);
+    };
+    MyArrayList.prototype.Iterator = function () {
+        return this.arrayList;
+    };
+    return MyArrayList;
 }());
 var simulator = new DuckSimulator();
 var duckFactory = new CountingDuckFactory();
