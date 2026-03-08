@@ -1,26 +1,56 @@
-interface QuackAble {
+interface QuackAble extends QuackObservable {
   quack(): void;
 }
 
 class MallardDuck implements QuackAble {
+  observable: Observable;
+
+  constructor() {
+    this.observable = new Observable(this);
+    this.notifyObservers();
+  }
+  registerObserver(observer: Observer): void {
+    this.observable.registerObserver(observer);
+  }
+  notifyObservers(): void {
+    this.observable.notifyObservers();
+  }
   quack(): void {
     console.log("Quack");
   }
 }
 
 class RedHeadDuck implements QuackAble {
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
+  }
   quack(): void {
     console.log("Quack");
   }
 }
 
 class DuckCall implements QuackAble {
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
+  }
   quack(): void {
     console.log("Quack~~~");
   }
 }
 
 class RubberDuck implements QuackAble {
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
+  }
   quack(): void {
     console.log("Squeak");
   }
@@ -36,6 +66,12 @@ class GooseAdapter implements QuackAble {
   goose: Goose;
   constructor(goose: Goose) {
     this.goose = goose;
+  }
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
   }
   quack(): void {
     this.goose.honk();
@@ -89,6 +125,12 @@ class QuackCounter implements QuackAble {
 
   constructor(duck: QuackAble) {
     this.duck = duck;
+  }
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
   }
 
   quack(): void {
@@ -144,6 +186,12 @@ class Flock implements QuackAble {
   constructor() {
     this.quackers = [];
   }
+  registerObserver(observer: Observer): void {
+    throw new Error("Method not implemented.");
+  }
+  notifyObservers(): void {
+    throw new Error("Method not implemented.");
+  }
 
   add(duck: QuackAble) {
     this.quackers.push(duck);
@@ -180,6 +228,40 @@ class MyArrayList<T> {
 
   Iterator(): Array<T> {
     return this.arrayList;
+  }
+}
+
+interface QuackObservable {
+  registerObserver(observer: Observer): void;
+  notifyObservers(): void;
+}
+
+interface Observer {
+  update(duck: QuackObservable): void;
+}
+
+class Observable implements QuackObservable {
+  observers: Array<Observer>;
+  duck: QuackObservable;
+
+  constructor(duck: QuackObservable) {
+    this.duck = duck;
+    this.observers = [];
+  }
+
+  registerObserver(observer: Observer): void {
+    this.observers.push(observer);
+  }
+  notifyObservers(): void {
+    for (const element of this.observers) {
+      element.update(this.duck);
+    }
+  }
+}
+
+class Quackologist implements Observer {
+  update(duck: QuackObservable): void {
+    console.log("Quackologist: " + duck + " just quacked");
   }
 }
 
