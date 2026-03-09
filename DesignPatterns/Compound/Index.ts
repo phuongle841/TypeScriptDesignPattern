@@ -7,7 +7,6 @@ class MallardDuck implements QuackAble {
 
   constructor() {
     this.observable = new Observable(this);
-    this.notifyObservers();
   }
   registerObserver(observer: Observer): void {
     this.observable.registerObserver(observer);
@@ -17,27 +16,39 @@ class MallardDuck implements QuackAble {
   }
   quack(): void {
     console.log("Quack");
+    this.notifyObservers();
   }
 }
 
 class RedHeadDuck implements QuackAble {
+  observable: Observable;
+
+  constructor() {
+    this.observable = new Observable(this);
+  }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    this.observable.registerObserver(observer);
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    this.observable.notifyObservers();
   }
   quack(): void {
     console.log("Quack");
+    this.notifyObservers();
   }
 }
 
 class DuckCall implements QuackAble {
+  observable: Observable;
+
+  constructor() {
+    this.observable = new Observable(this);
+  }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    this.observable.registerObserver(observer);
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    this.observable.notifyObservers();
   }
   quack(): void {
     console.log("Quack~~~");
@@ -45,11 +56,16 @@ class DuckCall implements QuackAble {
 }
 
 class RubberDuck implements QuackAble {
+  observable: Observable;
+
+  constructor() {
+    this.observable = new Observable(this);
+  }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    this.observable.registerObserver(observer);
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    this.observable.notifyObservers();
   }
   quack(): void {
     console.log("Squeak");
@@ -64,14 +80,16 @@ class Goose {
 
 class GooseAdapter implements QuackAble {
   goose: Goose;
+  observable: Observable;
   constructor(goose: Goose) {
     this.goose = goose;
+    this.observable = new Observable(this);
   }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    this.observable.registerObserver(observer);
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    this.observable.notifyObservers();
   }
   quack(): void {
     this.goose.honk();
@@ -84,7 +102,7 @@ class DuckSimulator {
   Simulate(duckFactoryOrDuck: abstractDuckFactory | QuackAble): void {
     if ("createDuckCall" in duckFactoryOrDuck) {
       const duckCall = duckFactoryOrDuck.createDuckCall();
-      const mallardDuck = duckFactoryOrDuck.createMallardDUck();
+      const mallardDuck = duckFactoryOrDuck.createMallardDuck();
       const redHeadDuck = duckFactoryOrDuck.createRedHeadDuck();
       const rubberDuck = duckFactoryOrDuck.createRubberDuck();
       const goose = new GooseAdapter(new Goose());
@@ -100,15 +118,15 @@ class DuckSimulator {
       const FlockOfMallard: Flock = new Flock();
 
       for (let i = 0; i < 4; i++) {
-        const NewMallard: QuackAble = duckFactoryOrDuck.createMallardDUck();
+        const NewMallard: QuackAble = duckFactoryOrDuck.createMallardDuck();
         FlockOfMallard.add(NewMallard);
       }
       FlockOfDuck.add(FlockOfMallard);
 
-      console.log("Whole flock simulation");
-      this.Simulate(FlockOfDuck);
-      console.log("Mallard flock simulation");
-      this.Simulate(FlockOfMallard);
+      console.log("Duck simulator: with Observer");
+      const quackologist: Observer = new Quackologist();
+      FlockOfDuck.registerObserver(quackologist);
+      FlockOfDuck.quack();
 
       console.log(
         "The ducks quacked " + QuackCounter.NumberOfQuack + " times.",
@@ -127,10 +145,10 @@ class QuackCounter implements QuackAble {
     this.duck = duck;
   }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    this.duck.registerObserver(observer);
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    this.duck.notifyObservers();
   }
 
   quack(): void {
@@ -145,13 +163,13 @@ class QuackCounter implements QuackAble {
 
 abstract class abstractDuckFactory {
   abstract createDuckCall(): QuackAble;
-  abstract createMallardDUck(): QuackAble;
+  abstract createMallardDuck(): QuackAble;
   abstract createRedHeadDuck(): QuackAble;
   abstract createRubberDuck(): QuackAble;
 }
 
 class DuckFactory implements abstractDuckFactory {
-  createMallardDUck(): QuackAble {
+  createMallardDuck(): QuackAble {
     return new MallardDuck();
   }
   createRedHeadDuck(): QuackAble {
@@ -166,7 +184,7 @@ class DuckFactory implements abstractDuckFactory {
 }
 
 class CountingDuckFactory implements abstractDuckFactory {
-  createMallardDUck(): QuackAble {
+  createMallardDuck(): QuackAble {
     return new QuackCounter(new MallardDuck());
   }
   createRedHeadDuck(): QuackAble {
@@ -183,14 +201,20 @@ class CountingDuckFactory implements abstractDuckFactory {
 class Flock implements QuackAble {
   quackers: Array<QuackAble>;
 
+  // observer: Observer;
+
   constructor() {
     this.quackers = [];
   }
   registerObserver(observer: Observer): void {
-    throw new Error("Method not implemented.");
+    for (const duck of this.quackers) {
+      duck.registerObserver(observer);
+    }
   }
   notifyObservers(): void {
-    throw new Error("Method not implemented.");
+    for (const duck of this.quackers) {
+      duck.notifyObservers();
+    }
   }
 
   add(duck: QuackAble) {
@@ -252,6 +276,7 @@ class Observable implements QuackObservable {
   registerObserver(observer: Observer): void {
     this.observers.push(observer);
   }
+
   notifyObservers(): void {
     for (const element of this.observers) {
       element.update(this.duck);
@@ -261,7 +286,7 @@ class Observable implements QuackObservable {
 
 class Quackologist implements Observer {
   update(duck: QuackObservable): void {
-    console.log("Quackologist: " + duck + " just quacked");
+    console.log("Quackologist: " + Object.keys(duck) + " just quacked");
   }
 }
 
