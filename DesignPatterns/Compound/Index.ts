@@ -211,11 +211,7 @@ class Flock implements QuackAble {
       duck.registerObserver(observer);
     }
   }
-  notifyObservers(): void {
-    for (const duck of this.quackers) {
-      duck.notifyObservers();
-    }
-  }
+  notifyObservers(): void {}
 
   add(duck: QuackAble) {
     this.quackers.push(duck);

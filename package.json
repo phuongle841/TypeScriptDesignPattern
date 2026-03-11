@@ -1,0 +1,21 @@
+{
+  "name": "typescriptdesignpattern",
+  "version": "1.0.0",
+  "description": "page: 542",
+  "main": "",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phuongle841/TypeScriptDesignPattern"
+  },
+  "dependencies": {
+    "midi-parser-js": "^4.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0"
+  }
+}
